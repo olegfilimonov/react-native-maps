@@ -23,10 +23,15 @@ public class AirMapUrlTile extends AirMapFeature {
     @Override
     public synchronized URL getTileUrl(int x, int y, int zoom) {
 
+      int realZoom = zoom - 16;
+      int realX = x - (int) (32767 * Math.pow(2, realZoom));
+      int realY = y - (int) (32767 * Math.pow(2, realZoom));
+
       String s = this.urlTemplate
-          .replace("{x}", Integer.toString(x))
-          .replace("{y}", Integer.toString(y))
-          .replace("{z}", Integer.toString(zoom));
+              .replace("{x}", Integer.toString(realX))
+              .replace("{y}", Integer.toString(realY))
+              .replace("{z}", Integer.toString(realZoom));
+
       URL url = null;
 
       if(AirMapUrlTile.this.maximumZ > 0 && zoom > maximumZ) {
