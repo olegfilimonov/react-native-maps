@@ -27,10 +27,15 @@ public class AirMapUrlTile extends AirMapFeature {
         y = (1 << zoom) - y - 1;
       }
 
+      int realZoom = zoom - 16;
+      int realX = x - (int) (32767 * Math.pow(2, realZoom));
+      int realY = y - (int) (32767 * Math.pow(2, realZoom));
+
       String s = this.urlTemplate
-          .replace("{x}", Integer.toString(x))
-          .replace("{y}", Integer.toString(y))
-          .replace("{z}", Integer.toString(zoom));
+              .replace("{x}", Integer.toString(realX))
+              .replace("{y}", Integer.toString(realY))
+              .replace("{z}", Integer.toString(realZoom));
+
       URL url = null;
 
       if(AirMapUrlTile.this.maximumZ > 0 && zoom > maximumZ) {
