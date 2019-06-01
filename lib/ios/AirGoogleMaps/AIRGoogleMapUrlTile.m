@@ -29,9 +29,13 @@
   NSInteger *minimumZ = self.minimumZ;
   GMSTileURLConstructor urls = ^NSURL* _Nullable (NSUInteger x, NSUInteger y, NSUInteger zoom) {
     NSString *url = urlTemplate;
-    url = [url stringByReplacingOccurrencesOfString:@"{x}" withString:[NSString stringWithFormat: @"%ld", (long)x]];
-    url = [url stringByReplacingOccurrencesOfString:@"{y}" withString:[NSString stringWithFormat: @"%ld", (long)y]];
-    url = [url stringByReplacingOccurrencesOfString:@"{z}" withString:[NSString stringWithFormat: @"%ld", (long)zoom]];
+    NSUInteger realZoom = zoom - 16;
+    long realX = x - (long) (32767 * pow(2, realZoom));
+    long realY = y - (long) (32767 * pow(2, realZoom));
+
+    url = [url stringByReplacingOccurrencesOfString:@"{x}" withString:[NSString stringWithFormat: @"%ld", (long)realX]];
+    url = [url stringByReplacingOccurrencesOfString:@"{y}" withString:[NSString stringWithFormat: @"%ld", (long)realY]];
+    url = [url stringByReplacingOccurrencesOfString:@"{z}" withString:[NSString stringWithFormat: @"%ld", (long)realZoom]];
 
    if(maximumZ && (long)zoom > (long)maximumZ) {
       return nil;
